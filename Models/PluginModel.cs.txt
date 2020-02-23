@@ -1,0 +1,21 @@
+﻿using AutoDownloader.Interfaces;
+
+namespace AutoDownloader.Models
+{
+    public class PluginModel
+    {
+        public IPlugin Plugin
+        {
+            get; set;
+        }
+
+        public bool IsRunning
+        {
+            get
+            {
+                var plugin = this.Plugin;
+                return plugin != null ? plugin.IsRunning : false;
+            }
+        }
+    }
+}

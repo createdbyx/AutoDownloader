@@ -1,0 +1,31 @@
+﻿<Window x:Class="Codefarts.AutoDownloader.Views.ApplicationView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Codefarts.AutoDownloader"
+        xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=Codefarts.WPFCommon"
+        mc:Ignorable="d"
+        Title="{Binding Application.Title}" Height="248.635" Width="568.975"
+        acb:CommandBehavior.Event="Closed"
+        acb:CommandBehavior.Command="{Binding ClosingMainWindow}"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type local:ApplicationViewModel}}"
+        >
+
+    <Grid Name="MainGrid">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <ToolBar Name="tbbMain" Grid.Row="0">
+            <TextBlock Text="Plugins" />
+            <ComboBox Name="cboPlugins" SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="{Binding Title}" />
+            <Button Name="btnAddSource" Content="Add" />
+        </ToolBar>
+
+        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
+            <ItemsControl Name="AddonList" ItemTemplateSelector=""></ItemsControl>
+        </ScrollViewer>
+    </Grid>
+</Window>
