@@ -1,15 +1,33 @@
-﻿using Codefarts.AutoDownloader.Models;
-
-namespace Codefarts.AutoDownloader
+﻿namespace Codefarts.AutoDownloader
 {
     using System.Collections.ObjectModel;
     using Codefarts.AppCore;
+    using Codefarts.AutoDownloader.Interfaces;
+    using Codefarts.AutoDownloader.Models;
 
     public class ApplicationModel : PropertyChangedBase
     {
-
         private LoggingDataModel logging;
         private PluginsModel plugins;
+        private IObservableCollection<ISourcePlugin> activePlugins;
+
+        public IObservableCollection<ISourcePlugin> ActivePlugins
+        {
+            get
+            {
+                return this.activePlugins;
+            }
+
+            set
+            {
+                var currentValue = this.activePlugins;
+                if (currentValue != value)
+                {
+                    this.activePlugins = value;
+                    this.NotifyOfPropertyChange(() => this.ActivePlugins);
+                }
+            }
+        }
 
         public PluginsModel Plugins
         {
@@ -54,6 +72,7 @@ namespace Codefarts.AutoDownloader
         {
             this.Plugins = new PluginsModel(this);
             this.logging = new LoggingDataModel(this);
+            this.activePlugins = new BindableCollection<ISourcePlugin>();
         }
 
         public string Title
