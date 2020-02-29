@@ -1,11 +1,13 @@
-﻿namespace Codefarts.AutoDownloader
+﻿using System.Linq;
+using Codefarts.AutoDownloader.Interfaces;
+
+namespace Codefarts.AutoDownloader
 {
     using System;
     using System.Windows.Input;
-    using AutoDownloader;
     using Codefarts.AppCore;
+    using Codefarts.AutoDownloader;
     using Codefarts.WPFCommon.Commands;
-
 
     public class ApplicationViewModel : PropertyChangedBase
     {
@@ -108,18 +110,45 @@
             {
                 return new DelegateCommand(x => true, x =>
                 {
-                    //while (this.application.Plugins.Count > 0)
-                    //{
-                    //    var search = this.application.Searches.First();
-                    //    this.application.Searches.Remove(search);
-                    //    search.SourcePlugin.Disconnect();
-                    //}
+                    while (this.application.ActivePlugins.Count > 0)
+                    {
+                        var plugin = this.application.ActivePlugins.First();
+                        this.application.ActivePlugins.Remove(plugin);
+                        plugin.Disconnect();
+                    }
 
-                    //foreach (var plugin in this.application.Plugins.GeneralPlugins)
-                    //{
-                    //    plugin.Disconnect();
-                    //}
+                    foreach (var plugin in this.application.Plugins.GeneralPlugins)
+                    {
+                        plugin.Disconnect();
+                    }
                 });
+            }
+        }
+
+        public ICommand AddPluginCommand
+        {
+            get
+            {
+                return new DelegateCommand(x => this.SelectedSourcePlugin != null, x =>
+                 {
+                     var info = this.SelectedSourcePlugin;
+                     // create source plugin
+                     //var info = x;//as PluginInformation;
+                     if (info == null)
+                     {
+                         throw new ArgumentNullException();
+                     }
+
+                     if (info.Type == null)
+                     {
+                         throw new NullReferenceException("Source type not specified!");
+                     }
+
+                     // var model = new SearchResultsModel(this.application);
+                     var source = info.Type.Assembly.CreateInstance(info.Type.FullName) as ISourcePlugin;
+                     this.application.ActivePlugins.Add(source);
+                     source.Connect(this.Application);
+                 });
             }
         }
     }

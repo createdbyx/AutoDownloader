@@ -1,14 +1,16 @@
-﻿using Codefarts.AutoDownloader.Interfaces;
-using Codefarts.ViewMessaging;
-
-namespace Codefarts.AutoDownloader.TemplateSelectors
+﻿namespace Codefarts.AutoDownloader.TemplateSelectors
 {
     using System.Windows;
     using System.Windows.Controls;
- 
+    using Codefarts.AutoDownloader.Interfaces;
+    using Codefarts.ViewMessaging;
+
     public class DataSourceTemplateSelector : DataTemplateSelector
     {
-        public DataTemplate DefaultTemplate { get; set; }
+        public DataTemplate DefaultTemplate
+        {
+            get; set;
+        }
 
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
@@ -20,11 +22,21 @@ namespace Codefarts.AutoDownloader.TemplateSelectors
                 try
                 {
                     var viewService = IoC.Container.Default.Resolve<IViewService>();
-
                     var name = selectedItem.GetType().Name;
-                    var resource = element.FindResource(name) as DataTemplate;
+                    var view = viewService.CreateView(name);
+
+
+                    var factory = new FrameworkElementFactory(view.ViewReference.GetType());
+                    // rectangleFactory.SetValue(Shape.FillProperty, new SolidColorBrush(System.Windows.Media.Colors.LightGreen));
+
+                    return new DataTemplate
+                    {
+                        VisualTree = factory,
+                    };
+                   // var resource = view.ViewReference as DataTemplate;
+                    //var resource = element.FindResource(name) as DataTemplate;
                     //element.DataContext = selectedItem.Item;
-                    return resource;
+                    //  return resource;
                 }
                 catch
                 {

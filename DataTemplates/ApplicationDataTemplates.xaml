@@ -1,0 +1,10 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"  
+                    xmlns:dataTemplates="clr-namespace:Codefarts.AutoDownloader.DataTemplates"
+                    xmlns:views="clr-namespace:AutoDownloader.Views"
+                    x:Class="Codefarts.AutoDownloader.DataTemplates.ApplicationDataTemplates"   >
+
+    <DataTemplate x:Key="DefaultSourceContainerDataTemplateView" DataType="{x:Type dataTemplates:ApplicationDataTemplates}">
+        <views:SourceContainerView />  
+    </DataTemplate>
+</ResourceDictionary>

@@ -5,54 +5,54 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:AutoDownloader.Views"
              xmlns:interfaces="clr-namespace:Codefarts.AutoDownloader.Interfaces"
+             xmlns:wpfControls="clr-namespace:Codefarts.WPFControls;assembly=Codefarts.WPFControls"
+             xmlns:templateSelectors="clr-namespace:Codefarts.AutoDownloader.TemplateSelectors"
+             xmlns:viewModels="clr-namespace:AutoDownloader.ViewModels"
+             xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=Codefarts.WPFCommon"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800"
+             d:DesignHeight="129" d:DesignWidth="338.957"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type interfaces:ISourcePlugin}}">
-    <Grid>
-        <Expander>
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="DefaultDataTemplate">
+            <TextBlock Text="-- Problem fetching UI --" />
+        </DataTemplate>
+        <templateSelectors:DataSourceTemplateSelector x:Key="SourcePluginTemplateSelector" DefaultTemplate="{StaticResource DefaultDataTemplate}" />
+        <!--<logic:SearchResultsViewModel x:Key="ViewModel" SearchResults="{Binding Path=/, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"/>-->
+        <viewModels:SourceContainerViewModel x:Key="ViewModel"  />
+    </UserControl.Resources>
+
+    <Grid acb:CommandBehavior.Event="Loaded"
+          acb:CommandBehavior.Command="{Binding Source={StaticResource ViewModel}, Path=SetModel}"
+          acb:CommandBehavior.CommandParameter="{Binding}"  >
+
+        <Expander ContentTemplateSelector="{StaticResource SourcePluginTemplateSelector}" IsExpanded="true" Content="{Binding}">
             <Expander.HeaderTemplate>
                 <DataTemplate>
-                    <Grid Height="30" HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" >
+                    <Grid Height="30" 
+                          HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" 
+                            >
+                        <!-- DataContext="{Binding Parent, Mode=OneWay, RelativeSource={RelativeSource Self}}"-->
                         <Grid.RowDefinitions>
                             <RowDefinition Height="30" />
                         </Grid.RowDefinitions>
 
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" MinWidth="64" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <TextBlock Grid.Column="0" Text="{Binding Title}"   />
-                        <Button Grid.Column="1" Margin="2,0" Command="{Binding DataContext.StartPlugin, ElementName=ItemGroups, Mode=OneWay}" CommandParameter="{Binding}" Content="Start"     />
-                        <Button Grid.Column="2" Margin="2,0" Command="{Binding DataContext.StopPlugin, ElementName=ItemGroups, Mode=OneWay}" CommandParameter="{Binding}"   Content="Stop"       />
-                        <Button Grid.Column="3" Margin="2,0" Command="{Binding DataContext.RemovePlugin, ElementName=ItemGroups, Mode=OneWay}" CommandParameter="{Binding}"   Content="Remove" />
+                        <TextBlock Grid.Column="0" Text="{Binding PluginReference.Title, Mode=OneWay, Source={StaticResource ViewModel}}"  VerticalAlignment="Center"  />
+                        <wpfControls:TimeControl Grid.Column="1" Value="00:00:00" />
+                        <Button Grid.Column="2" Margin="2,0" Command="{Binding StartPlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}" Content="Start"     />
+                        <Button Grid.Column="3" Margin="2,0" Command="{Binding StopPlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}"   Content="Stop"       />
+                        <Button Grid.Column="4" Margin="2,0" Command="{Binding RemovePlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}"   Content="Remove" />
                     </Grid>
                 </DataTemplate>
             </Expander.HeaderTemplate>
-            <Expander.Content>
-                <StackPanel Orientation="Vertical">
-                    <StackPanel Orientation="Horizontal">
-                        <Button ToolTip="Copy" Command="{Binding DataContext.CopyItemGroupTextCommand, ElementName=ItemGroups,Mode=OneWay}" CommandParameter="{Binding Summary}" Width="30" Height="30" Style="{StaticResource CopyButton}" />
-                    </StackPanel>
-                    <ItemsControl Margin="25,0,0,0" ItemsSource="{Binding SummaryItems, UpdateSourceTrigger=PropertyChanged}"   AlternationCount="2" >
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock  x:Name="ItemGroupInfo" Text="{Binding}" FontFamily="Courier New"   />
-                                <DataTemplate.Triggers>
-                                    <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                        <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" TargetName="ItemGroupInfo"/>
-                                    </Trigger>
-                                    <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                        <Setter Property="Background" Value="White" TargetName="ItemGroupInfo"/>
-                                    </Trigger>
-                                </DataTemplate.Triggers>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </Expander.Content>
         </Expander>
     </Grid>
 </UserControl>

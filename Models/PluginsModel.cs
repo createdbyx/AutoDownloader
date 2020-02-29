@@ -1,10 +1,9 @@
-﻿using Codefarts.AutoDownloader;
-using Codefarts.AutoDownloader.Interfaces;
-
-namespace Codefarts.AutoDownloader.Models
+﻿namespace Codefarts.AutoDownloader.Models
 {
     using System.Collections.ObjectModel;
     using Codefarts.AppCore;
+    using Codefarts.AutoDownloader;
+    using Codefarts.AutoDownloader.Interfaces;
 
     public class PluginsModel : PropertyChangedBase
     {

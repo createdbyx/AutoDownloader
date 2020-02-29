@@ -66,13 +66,19 @@
     <Compile Include="Attributes\GeneralPluginAttribute.cs" />
     <Compile Include="Attributes\SourcePluginAttribute.cs" />
     <Compile Include="Collections\LogsCollection.cs" />
+    <Compile Include="DataTemplates\ApplicationDataTemplates.xaml.cs">
+      <DependentUpon>ApplicationDataTemplates.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interfaces\ISourcePlugin.cs" />
     <Compile Include="Models\ApplicationModel.cs" />
     <Compile Include="Code\ViewModelLocator.cs" />
     <Compile Include="Models\LoggingDataModel.cs" />
+    <Compile Include="Models\PluginEntryModel.cs" />
     <Compile Include="Models\PluginsModel.cs" />
+    <Compile Include="TemplateSelectors\ContainerControlTemplateSelector.cs" />
     <Compile Include="TemplateSelectors\DataSourceTemplateSelector.cs" />
     <Compile Include="ViewModels\ApplicationViewModel.cs" />
+    <Compile Include="ViewModels\SourceContainerViewModel.cs" />
     <Compile Include="Views\ApplicationView.xaml.cs">
       <DependentUpon>ApplicationView.xaml</DependentUpon>
     </Compile>
@@ -84,6 +90,10 @@
     <Compile Include="Views\SourceContainerView.xaml.cs">
       <DependentUpon>SourceContainerView.xaml</DependentUpon>
     </Compile>
+    <Page Include="DataTemplates\ApplicationDataTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\ApplicationView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -152,6 +162,10 @@
     <ProjectReference Include="..\..\..\Codefarts.WPFCommon\Codefarts.WPFCommon.csproj">
       <Project>{5357C793-0EB7-4DD5-B0F7-296973B7E9ED}</Project>
       <Name>Codefarts.WPFCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\Codefarts.WPFControls\Codefarts.WPFControls.csproj">
+      <Project>{5f5df8bb-7594-48a3-b24a-df1f261e4e0e}</Project>
+      <Name>Codefarts.WPFControls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

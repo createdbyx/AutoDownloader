@@ -5,12 +5,18 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Codefarts.AutoDownloader"
         xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=Codefarts.WPFCommon"
+        xmlns:templateSelectors="clr-namespace:Codefarts.AutoDownloader.TemplateSelectors"
         mc:Ignorable="d"
         Title="{Binding Application.Title}" Height="248.635" Width="568.975"
         acb:CommandBehavior.Event="Closed"
         acb:CommandBehavior.Command="{Binding ClosingMainWindow}"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type local:ApplicationViewModel}}"
         >
+
+    <Window.Resources>
+        <templateSelectors:ContainerControlTemplateSelector x:Key="ContainerTemplateSelector" 
+                                                            ContainerControlName="DefaultSourceContainerDataTemplate" />
+    </Window.Resources>
 
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
@@ -20,12 +26,12 @@
 
         <ToolBar Name="tbbMain" Grid.Row="0">
             <TextBlock Text="Plugins" />
-            <ComboBox Name="cboPlugins" SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="{Binding Title}" />
-            <Button Name="btnAddSource" Content="Add" />
+            <ComboBox Name="cboPlugins" SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="Title" />
+            <Button Name="btnAddSource" Content="Add" Command="{Binding AddPluginCommand}" />
         </ToolBar>
 
         <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
-            <ItemsControl Name="AddonList" ItemTemplateSelector=""></ItemsControl>
+            <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" ItemsSource="{Binding Application.ActivePlugins}"  />
         </ScrollViewer>
     </Grid>
 </Window>

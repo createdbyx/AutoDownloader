@@ -2,6 +2,10 @@
 {
     public interface IGeneralPlugin
     {
+        ApplicationModel Application
+        {
+            get;
+        }
 
         void Connect(ApplicationModel appModel);
 
