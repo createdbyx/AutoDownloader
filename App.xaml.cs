@@ -28,7 +28,7 @@ namespace Codefarts.AutoDownloader
             PlatformProvider.Current = new WpfPlatformProvider();
 
             var ioc = Container.Default;
-            ioc.Register<IViewService>(() => viewService);
+            ioc.Register<IViewService>(() => new WpfViewService());
             ioc.Register<IPlatformProvider>(() => PlatformProvider.Current);
 
             var applicationModel = new ApplicationModel();
