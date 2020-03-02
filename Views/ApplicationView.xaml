@@ -6,6 +6,7 @@
         xmlns:local="clr-namespace:Codefarts.AutoDownloader"
         xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=Codefarts.WPFCommon"
         xmlns:templateSelectors="clr-namespace:Codefarts.AutoDownloader.TemplateSelectors"
+        xmlns:converters="clr-namespace:Codefarts.WPFCommon.Converters;assembly=Codefarts.WPFCommon"
         mc:Ignorable="d"
         Title="{Binding Application.Title}" Height="248.635" Width="568.975"
         acb:CommandBehavior.Event="Closed"
@@ -14,24 +15,76 @@
         >
 
     <Window.Resources>
+        <DataTemplate x:Key="DefaultDataTemplate">
+            <TextBlock Text="-- Problem fetching UI --" />
+        </DataTemplate>
         <templateSelectors:ContainerControlTemplateSelector x:Key="ContainerTemplateSelector" 
-                                                            ContainerControlName="DefaultSourceContainerDataTemplate" />
+                                                            ContainerControlName="DefaultSourceContainerDataTemplate" 
+                                                            DefaulTemplate="{StaticResource DefaultDataTemplate}"/>
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"  />
+        <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverterReversed" IsReversed="True"  />
+        <templateSelectors:DataSourceTemplateSelector x:Key="LogsTemplateSelector" 
+                                                      DefaultTemplate="{StaticResource DefaultDataTemplate}" />
     </Window.Resources>
 
     <Grid Name="MainGrid">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <ToolBar Name="tbbMain" Grid.Row="0">
-            <TextBlock Text="Plugins" />
-            <ComboBox Name="cboPlugins" SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="Title" />
-            <Button Name="btnAddSource" Content="Add" Command="{Binding AddPluginCommand}" />
+            <DockPanel Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ToolBarPanel}}}">
+                <TextBlock Text="Plugins" Padding="0,0,4,0" VerticalAlignment="Center" />
+                <ComboBox Name="cboPlugins" SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="Title" />
+                <Button Name="btnAddSource" Content="Add" Command="{Binding AddPluginCommand}" />
+                <Button Name="btnShowLogs" Content="Logs" Command="{Binding ShowLogsCommand}" HorizontalAlignment="Right" />
+            </DockPanel>
         </ToolBar>
 
-        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" >
-            <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" ItemsSource="{Binding Application.ActivePlugins}"  />
-        </ScrollViewer>
+        <ListBox Grid.Row="1" 
+                 SelectionMode="Extended"
+                 ItemsSource="{Binding Application.Logging.Logs}" 
+                 Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}"
+                 d:IsHidden="true">
+            <ListBox.ItemTemplate>
+                <DataTemplate><TextBlock>
+                    <TextBlock>
+                        <TextBlock.Text>
+                            <MultiBinding StringFormat="{}{0} - {1} - {2} - {3}">
+                                <Binding Path="TimeStamp" StringFormat="G" />
+                                <Binding Path="Category" />
+                                <Binding Path="Type" />
+                                <Binding Path="Message" />
+                            </MultiBinding>
+                        </TextBlock.Text>
+                    </TextBlock>
+                </TextBlock></DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <!--ScrollViewer Name="LogsContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled" 
+                      Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                      d:IsHidden="true" >
+            <ItemsControl Name="LogsList" ItemTemplateSelector="{StaticResource LogsTemplateSelector}" 
+                          ItemsSource="{Binding Application.Logging.Logs}"  />
+            </ScrollViewer> -->
+
+
+            <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+                      HorizontalScrollBarVisibility="Disabled" 
+                      Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverterReversed}}">
+                <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" 
+                          ItemsSource="{Binding Application.ActivePlugins}"  >
+                </ItemsControl>          
+            </ScrollViewer>
+
+            <StatusBar Grid.Row="2">
+                <StatusBarItem>
+                    <TextBlock Name="StatusText" Text="{Binding Application.Logging.LastLogEntry}" />
+                </StatusBarItem>
+            </StatusBar>
     </Grid>
 </Window>

@@ -147,6 +147,10 @@
       <Project>{962D2F24-712B-440D-9A0C-E86905210AC1}</Project>
       <Name>Codefarts.IoCNET35</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\..\Codefarts.Logging\Codefarts.LoggingNET20\Codefarts.LoggingNET20.csproj">
+      <Project>{29f29fd9-cc79-4062-addc-1c4f52fd0ea1}</Project>
+      <Name>Codefarts.LoggingNET20</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\..\Codefarts.Utilities\Codefarts.UtilitiesNET45\Codefarts.UtilitiesNET45.csproj">
       <Project>{7921C0B2-8943-4C58-8793-294EB412F2CB}</Project>
       <Name>Codefarts.UtilitiesNET45</Name>

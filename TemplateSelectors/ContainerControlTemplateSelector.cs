@@ -13,6 +13,11 @@
             get; set;
         }
 
+        public DataTemplate DefaulTemplate
+        {
+            get; set;
+        }
+
         public override DataTemplate SelectTemplate(object item, DependencyObject container)
         {
             var element = container as FrameworkElement;

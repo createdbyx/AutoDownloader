@@ -80,7 +80,13 @@
         {
             get
             {
-                return this.Logs.LastOrDefault();
+                var value = this.Logs.LastOrDefault();
+                if (value != null)
+                {
+                    return value.Message;
+                }
+
+                return string.Empty;
             }
         }
     }

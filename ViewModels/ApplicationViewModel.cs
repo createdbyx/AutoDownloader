@@ -15,6 +15,22 @@ namespace Codefarts.AutoDownloader
 
         private ApplicationModel application;
         private int selectedSourcePluginIndex;
+        private bool showLogs;
+
+        public bool ShowLogs
+        {
+            get { return this.showLogs; }
+
+            set
+            {
+                var currentValue = this.showLogs;
+                if (currentValue != value)
+                {
+                    this.showLogs = value;
+                    this.NotifyOfPropertyChange(() => this.ShowLogs);
+                }
+            }
+        }
 
         /// <summary>
         /// Gets or sets the index of the selected results plugin.
@@ -149,6 +165,14 @@ namespace Codefarts.AutoDownloader
                      this.application.ActivePlugins.Add(source);
                      source.Connect(this.Application);
                  });
+            }
+        }
+
+        public ICommand ShowLogsCommand
+        {
+            get
+            {
+                return new DelegateCommand(x => true, x => { this.ShowLogs = !this.ShowLogs; });
             }
         }
     }
