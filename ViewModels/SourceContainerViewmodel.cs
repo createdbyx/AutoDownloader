@@ -1,30 +1,30 @@
-﻿using System;
-
-namespace AutoDownloader.ViewModels
+﻿namespace AutoDownloader.ViewModels
 {
+    using System;
     using System.Windows.Input;
     using Codefarts.AppCore;
+    using Codefarts.AutoDownloader;
     using Codefarts.AutoDownloader.Interfaces;
     using Codefarts.WPFCommon.Commands;
 
     public class SourceContainerViewModel : PropertyChangedBase
     {
-        private ISourcePlugin pluginReference;
+        private PluginEntryModel modelReference;
 
-        public ISourcePlugin PluginReference
+        public PluginEntryModel ModelReference
         {
             get
             {
-                return this.pluginReference;
+                return this.modelReference;
             }
 
             set
             {
-                var currentValue = this.pluginReference;
+                var currentValue = this.modelReference;
                 if (currentValue != value)
                 {
-                    this.pluginReference = value;
-                    this.NotifyOfPropertyChange(() => this.PluginReference);
+                    this.modelReference = value;
+                    this.NotifyOfPropertyChange(() => this.ModelReference);
                 }
             }
         }
@@ -34,7 +34,7 @@ namespace AutoDownloader.ViewModels
         {
             get
             {
-                return new GenericDelegateCommand<ISourcePlugin>(
+                return new GenericDelegateCommand<PluginEntryModel>(
                     model =>
                     {
                         if (model == null)
@@ -44,7 +44,7 @@ namespace AutoDownloader.ViewModels
 
                         return true;
                     },
-                    model => { this.PluginReference = model; });
+                    model => { this.ModelReference = model; });
             }
         }
 
@@ -52,18 +52,18 @@ namespace AutoDownloader.ViewModels
         {
             get
             {
-                return new GenericDelegateCommand<ISourcePlugin>(
+                return new GenericDelegateCommand<PluginEntryModel>(
                     model =>
                     {
-                        var plugin = this.PluginReference;
-                        return plugin != null && !plugin.IsRunning;
+                        var entryModel = this.ModelReference;
+                        return entryModel != null && !entryModel.Plugin.IsRunning;
                     },
                     model =>
                     {
-                        var plugin = this.PluginReference;
-                        if (plugin != null)
+                        var entryModel = this.ModelReference;
+                        if (entryModel != null)
                         {
-                            plugin.Run();
+                            entryModel.Plugin.Run();
                         }
                     });
             }
@@ -76,15 +76,15 @@ namespace AutoDownloader.ViewModels
                 return new GenericDelegateCommand<ISourcePlugin>(
                     model =>
                     {
-                        var plugin = this.PluginReference;
-                        return plugin != null && plugin.IsRunning;
+                        var entryModel = this.ModelReference;
+                        return entryModel != null && entryModel.Plugin.IsRunning;
                     },
                     model =>
                     {
-                        var plugin = this.PluginReference;
-                        if (plugin != null)
+                        var entryModel = this.ModelReference;
+                        if (entryModel != null)
                         {
-                            plugin.Stop();
+                            entryModel.Plugin.Stop();
                         }
                     });
             }
@@ -94,24 +94,24 @@ namespace AutoDownloader.ViewModels
         {
             get
             {
-                return new GenericDelegateCommand<ISourcePlugin>(
+                return new GenericDelegateCommand<PluginEntryModel>(
                     model =>
                     {
-                        var plugin = this.PluginReference;
-                        return plugin != null && plugin.Application != null;
+                        var entryModel = this.ModelReference;
+                        return entryModel != null && entryModel.Plugin.Application != null;
                     },
                     model =>
                     {
-                        var plugin = this.PluginReference;
-                        if (plugin != null)
+                        var entryModel = this.ModelReference;
+                        if (entryModel != null)
                         {
-                            var app = this.pluginReference.Application;
+                            var app = entryModel.Plugin.Application;
                             if (app == null)
                             {
-                                throw new ArgumentNullException("this.pluginReference.Application");
+                                throw new ArgumentNullException("this.modelReference.Plugin.Application");
                             }
 
-                            app.ActivePlugins.Remove(plugin);
+                            app.ActivePlugins.Remove(entryModel);
                         }
                     });
             }
