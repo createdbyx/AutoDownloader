@@ -34,14 +34,20 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ToolBar Name="tbbMain" Grid.Row="0">
-            <DockPanel Width="{Binding Path=ActualWidth, RelativeSource={RelativeSource AncestorType={x:Type ToolBarPanel}}}">
-                <TextBlock Text="Plugins" Padding="0,0,4,0" VerticalAlignment="Center" />
-                <ComboBox Name="cboPlugins" SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="Title" />
-                <Button Name="btnAddSource" Content="Add" Command="{Binding AddPluginCommand}" />
-                <Button Name="btnShowLogs" Content="Logs" Command="{Binding ShowLogsCommand}" HorizontalAlignment="Right" />
-            </DockPanel>
-        </ToolBar>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="Plugins" VerticalAlignment="Center" />
+            <ComboBox Grid.Column="1" Name="cboPlugins" Margin="4,0,4,0"  SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="Title" />
+            <Button Grid.Column="2" Name="btnAddSource" Content="Add" Command="{Binding AddPluginCommand}" />
+            <Button Grid.Column="4" Name="btnShowLogs" Content="Logs" Command="{Binding ShowLogsCommand}" HorizontalAlignment="Right" />
+        </Grid>
 
         <ListBox Grid.Row="1" 
                  SelectionMode="Extended"
@@ -49,18 +55,20 @@
                  Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}"
                  d:IsHidden="true">
             <ListBox.ItemTemplate>
-                <DataTemplate><TextBlock>
+                <DataTemplate>
                     <TextBlock>
-                        <TextBlock.Text>
-                            <MultiBinding StringFormat="{}{0} - {1} - {2} - {3}">
-                                <Binding Path="TimeStamp" StringFormat="G" />
-                                <Binding Path="Category" />
-                                <Binding Path="Type" />
-                                <Binding Path="Message" />
-                            </MultiBinding>
-                        </TextBlock.Text>
+                    <TextBlock>
+                            <TextBlock.Text>
+                                <MultiBinding StringFormat="{}{0} - {1} - {2} - {3}">
+                                    <Binding Path="TimeStamp" StringFormat="G" />
+                                    <Binding Path="Category" />
+                                    <Binding Path="Type" />
+                                    <Binding Path="Message" />
+                                </MultiBinding>
+                            </TextBlock.Text>
                     </TextBlock>
-                </TextBlock></DataTemplate>
+                </TextBlock>
+                </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
 
@@ -73,18 +81,18 @@
             </ScrollViewer> -->
 
 
-            <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
                       HorizontalScrollBarVisibility="Disabled" 
                       Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverterReversed}}">
-                <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" 
+            <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" 
                           ItemsSource="{Binding Application.ActivePlugins}"  >
-                </ItemsControl>          
-            </ScrollViewer>
+            </ItemsControl>
+        </ScrollViewer>
 
-            <StatusBar Grid.Row="2">
-                <StatusBarItem>
-                    <TextBlock Name="StatusText" Text="{Binding Application.Logging.LastLogEntry}" />
-                </StatusBarItem>
-            </StatusBar>
+        <StatusBar Grid.Row="2">
+            <StatusBarItem>
+                <TextBlock Name="StatusText" Text="{Binding Application.Logging.LastLogEntry}" />
+            </StatusBarItem>
+        </StatusBar>
     </Grid>
 </Window>
