@@ -19,7 +19,10 @@ namespace Codefarts.AutoDownloader
 
         public bool ShowLogs
         {
-            get { return this.showLogs; }
+            get
+            {
+                return this.showLogs;
+            }
 
             set
             {
@@ -130,7 +133,7 @@ namespace Codefarts.AutoDownloader
                     {
                         var plugin = this.application.ActivePlugins.First();
                         this.application.ActivePlugins.Remove(plugin);
-                        plugin.Disconnect();
+                        plugin.Plugin.Disconnect();
                     }
 
                     foreach (var plugin in this.application.Plugins.GeneralPlugins)
@@ -162,7 +165,12 @@ namespace Codefarts.AutoDownloader
 
                      // var model = new SearchResultsModel(this.application);
                      var source = info.Type.Assembly.CreateInstance(info.Type.FullName) as ISourcePlugin;
-                     this.application.ActivePlugins.Add(source);
+                     var model = new PluginEntryModel()
+                     {
+                         Plugin = source,
+                         Interval = TimeSpan.FromMinutes(1)
+                     };
+                     this.application.ActivePlugins.Add(model);
                      source.Connect(this.Application);
                  });
             }
