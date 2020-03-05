@@ -22,8 +22,7 @@
         {
             var element = container as FrameworkElement;
 
-            var selectedItem = item as ISourcePlugin;
-            if (element != null && selectedItem != null)
+            if (element != null)
             {
                 try
                 {
