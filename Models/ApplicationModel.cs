@@ -9,9 +9,9 @@
     {
         private LoggingDataModel logging;
         private PluginsModel plugins;
-        private IObservableCollection<ISourcePlugin> activePlugins;
+        private IObservableCollection<PluginEntryModel> activePlugins;
 
-        public IObservableCollection<ISourcePlugin> ActivePlugins
+        public IObservableCollection<PluginEntryModel> ActivePlugins
         {
             get
             {
@@ -72,7 +72,7 @@
         {
             this.Plugins = new PluginsModel(this);
             this.logging = new LoggingDataModel(this);
-            this.activePlugins = new BindableCollection<ISourcePlugin>();
+            this.activePlugins = new BindableCollection<PluginEntryModel>();
         }
 
         public string Title

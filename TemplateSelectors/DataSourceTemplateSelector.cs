@@ -20,8 +20,9 @@
             {
                 try
                 {
+                    var model = (PluginEntryModel)item;
                     var viewService = IoC.Container.Default.Resolve<IViewService>();
-                    var name = item.GetType().Name;
+                    var name = model.Plugin.GetType().Name;
                     var view = viewService.CreateView(name);
 
                     var factory = new FrameworkElementFactory(view.ViewReference.GetType());
