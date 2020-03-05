@@ -2,12 +2,6 @@
 {
     public interface ISourcePlugin : IGeneralPlugin
     {
-
-        string Title
-        {
-            get;
-        }
-
         bool IsRunning
         {
             get;

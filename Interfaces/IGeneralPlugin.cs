@@ -2,6 +2,11 @@
 {
     public interface IGeneralPlugin
     {
+        string Title
+        {
+            get;
+        }
+
         ApplicationModel Application
         {
             get;

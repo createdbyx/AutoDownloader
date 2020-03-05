@@ -7,7 +7,7 @@
     public class PluginEntryModel : PropertyChangedBase
     {
         private ISourcePlugin plugin;
-        private TimeSpan interval;
+        private TimeSpan interval = TimeSpan.FromMinutes(1);
         private int executionCount;
         private DateTime lastStarted;
 
@@ -55,6 +55,12 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the time interval.
+        /// </summary>
+        /// <remarks>
+        /// Min value is restricted to 1 second.
+        /// </remarks>
         public TimeSpan Interval
         {
             get

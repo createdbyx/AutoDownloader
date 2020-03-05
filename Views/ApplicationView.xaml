@@ -12,7 +12,7 @@
         acb:CommandBehavior.Event="Closed"
         acb:CommandBehavior.Command="{Binding ClosingMainWindow}"
         d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type local:ApplicationViewModel}}"
-        >
+        ResizeMode="CanResizeWithGrip">
 
     <Window.Resources>
         <DataTemplate x:Key="DefaultDataTemplate">

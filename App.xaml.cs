@@ -1,20 +1,21 @@
-﻿using Codefarts.AppCore;
-using Codefarts.ViewMessaging;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Windows;
-using System.ComponentModel;
-using System.ComponentModel.Composition.Primitives;
-using System.ComponentModel.Composition.ReflectionModel;
-using Container = Codefarts.IoC.Container;
-using System.Linq;
-using Codefarts.AutoDownloader.Interfaces;
-
-namespace Codefarts.AutoDownloader
+﻿namespace Codefarts.AutoDownloader
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.ObjectModel;
+    using System.ComponentModel;
+    using System.ComponentModel.Composition.Primitives;
+    using System.ComponentModel.Composition.ReflectionModel;
+    using System.IO;
+    using System.Linq;
+    using System.Windows;
+    using Codefarts.AppCore;
+    using Codefarts.AutoDownloader.Interfaces;
+    using Codefarts.ViewMessaging;
+    using Container = Codefarts.IoC.Container;
+    using Logging = Codefarts.Logging.Logging;
+
     /// <summary>
     /// Interaction logic for App.xaml
     /// </summary>
@@ -52,7 +53,7 @@ namespace Codefarts.AutoDownloader
 
             // connect source plugins
             this.ConnectPlugins(applicationViewModel, applicationPlugins.GeneralPlugins);
-            applicationModel.Logging.Logs.Add("Status");
+            Logging.Log("Status");
         }
 
         private void ConnectPlugins(ApplicationViewModel applicationViewModel, IEnumerable<IGeneralPlugin> plugins)
@@ -60,6 +61,7 @@ namespace Codefarts.AutoDownloader
             foreach (var item in plugins)
             {
                 item.Connect(applicationViewModel.Application);
+                Logging.Log("Connected to: " + item.Title);
             }
         }
 
@@ -96,7 +98,7 @@ namespace Codefarts.AutoDownloader
 
                 var description = descAttribute == null ? string.Empty : descAttribute.Description;
                 var category = categoryAttribute == null ? string.Empty : categoryAttribute.Category;
-                appModel.Logging.Logs.Add(string.Format("General plugin found: \"{0}\"", attribute.Title));
+                Logging.Log(string.Format("General plugin found: \"{0}\"", attribute.Title));
                 return new PluginInformation(attribute.Title, category, x, description);
             }).Where(x => x != null);
 
