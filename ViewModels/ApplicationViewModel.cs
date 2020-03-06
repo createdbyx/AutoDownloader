@@ -148,31 +148,35 @@ namespace Codefarts.AutoDownloader
         {
             get
             {
-                return new DelegateCommand(x => this.SelectedSourcePlugin != null, x =>
-                 {
-                     var info = this.SelectedSourcePlugin;
-                     // create source plugin
-                     //var info = x;//as PluginInformation;
-                     if (info == null)
-                     {
-                         throw new ArgumentNullException();
-                     }
+                return new DelegateCommand(
+                    x =>
+                    {
+                        var info = this.SelectedSourcePlugin;
+                        if (info == null)
+                        {
+                            return false;
+                        }
 
-                     if (info.Type == null)
-                     {
-                         throw new NullReferenceException("Source type not specified!");
-                     }
+                        if (info.Type == null)
+                        {
+                            return false;
+                        }
 
-                     // var model = new SearchResultsModel(this.application);
-                     var source = info.Type.Assembly.CreateInstance(info.Type.FullName) as ISourcePlugin;
-                     var model = new PluginEntryModel()
-                     {
-                         Plugin = source,
-                         Interval = TimeSpan.FromMinutes(1)
-                     };
-                     this.application.ActivePlugins.Add(model);
-                     source.Connect(this.Application);
-                 });
+                        return true;
+                    },
+                    x =>
+                    {
+                        var info = this.SelectedSourcePlugin;
+                        // create source plugin
+                        var source = info.Type.Assembly.CreateInstance(info.Type.FullName) as ISourcePlugin;
+                        var model = new PluginEntryModel()
+                        {
+                            Plugin = source,
+                            Interval = TimeSpan.FromMinutes(1),
+                        };
+                        this.application.ActivePlugins.Add(model);
+                        source.Connect(this.Application);
+                    });
             }
         }
 

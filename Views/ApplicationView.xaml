@@ -49,15 +49,16 @@
             <Button Grid.Column="4" Name="btnShowLogs" Content="Logs" Command="{Binding ShowLogsCommand}" HorizontalAlignment="Right" />
         </Grid>
 
-        <ListBox Grid.Row="1" 
-                 SelectionMode="Extended"
-                 ItemsSource="{Binding Application.Logging.Logs}" 
-                 Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}"
-                 d:IsHidden="true">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <TextBlock>
-                    <TextBlock>
+        <Grid Grid.Row="1" Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ListBox Grid.Row="0" SelectionMode="Extended" ItemsSource="{Binding Application.Logging.Logs}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <TextBlock>
                             <TextBlock.Text>
                                 <MultiBinding StringFormat="{}{0} - {1} - {2} - {3}">
                                     <Binding Path="TimeStamp" StringFormat="G" />
@@ -66,22 +67,27 @@
                                     <Binding Path="Message" />
                                 </MultiBinding>
                             </TextBlock.Text>
-                    </TextBlock>
-                </TextBlock>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+                        </TextBlock>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
 
-        <!--ScrollViewer Name="LogsContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
-                      HorizontalScrollBarVisibility="Disabled" 
-                      Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}" 
-                      d:IsHidden="true" >
-            <ItemsControl Name="LogsList" ItemTemplateSelector="{StaticResource LogsTemplateSelector}" 
-                          ItemsSource="{Binding Application.Logging.Logs}"  />
-            </ScrollViewer> -->
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
+                <TextBlock Grid.Column="0" Text="LogFilter:" />
+                <TextBox Grid.Column="1" Name="LogFilter" Margin="4,0,4,0"></TextBox>
+                <Button Grid.Column="2" Content="Clear" Margin="0,0,4,0" />
+                <Button Grid.Column="3" Content="Copy" />
+            </Grid>
+        </Grid>
 
-        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto" 
+        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto"    d:IsHidden="true"
                       HorizontalScrollBarVisibility="Disabled" 
                       Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverterReversed}}">
             <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" 

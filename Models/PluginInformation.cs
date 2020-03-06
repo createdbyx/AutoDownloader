@@ -1,8 +1,8 @@
-﻿using System;
-using Codefarts.AppCore;
-
-namespace Codefarts.AutoDownloader
+﻿namespace Codefarts.AutoDownloader
 {
+    using System;
+    using Codefarts.AppCore;
+
     public class PluginInformation : PropertyChangedBase
     {
         private string title;
@@ -14,14 +14,14 @@ namespace Codefarts.AutoDownloader
         {
             this.title = title;
             this.category = category;
-            this.type = type;
+            this.type = type ?? throw new ArgumentNullException(nameof(type));
         }
 
         public PluginInformation(string title, string category, Type type, string description)
         {
             this.title = title;
             this.category = category;
-            this.type = type;
+            this.type = type ?? throw new ArgumentNullException(nameof(type));
             this.description = description;
         }
 
