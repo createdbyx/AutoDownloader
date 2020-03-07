@@ -41,15 +41,18 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
 
             <TextBlock Grid.Column="0" Text="Plugins" VerticalAlignment="Center" />
             <ComboBox Grid.Column="1" Name="cboPlugins" Margin="4,0,4,0"  SelectedIndex="{Binding SelectedSourcePluginIndex, Mode=TwoWay}" ItemsSource="{Binding Application.Plugins.SourcePluginInformation}" DisplayMemberPath="Title" />
             <Button Grid.Column="2" Name="btnAddSource" Content="Add" Command="{Binding AddPluginCommand}" />
-            <Button Grid.Column="4" Name="btnShowLogs" Content="Logs" Command="{Binding ShowLogsCommand}" HorizontalAlignment="Right" />
+            <Button Grid.Column="4" Name="btnStartAll" Content="Start All" Command="{Binding StartAllCommand}"   />
+            <Button Grid.Column="6" Name="btnShowLogs" Content="Logs" Command="{Binding ShowLogsCommand}" HorizontalAlignment="Right" />
         </Grid>
 
-        <Grid Grid.Row="1" Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Grid.Row="1" Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverter}}" d:IsHidden="true">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
                 <RowDefinition Height="Auto" />
@@ -87,8 +90,8 @@
             </Grid>
         </Grid>
 
-        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto"    d:IsHidden="true"
-                      HorizontalScrollBarVisibility="Disabled" 
+        <ScrollViewer Name="LowerContent" Grid.Row="1" VerticalScrollBarVisibility="Auto"   
+                      HorizontalScrollBarVisibility="Auto" 
                       Visibility="{Binding ShowLogs, Converter={StaticResource BooleanToVisibilityConverterReversed}}">
             <ItemsControl Name="AddonList" ItemTemplateSelector="{StaticResource ContainerTemplateSelector}" 
                           ItemsSource="{Binding Application.ActivePlugins}"  >

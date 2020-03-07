@@ -10,6 +10,7 @@
              xmlns:viewModels="clr-namespace:AutoDownloader.ViewModels"
              xmlns:acb="clr-namespace:AttachedCommandBehavior;assembly=Codefarts.WPFCommon"
              xmlns:autoDownloader="clr-namespace:Codefarts.AutoDownloader"
+             xmlns:converters="clr-namespace:Codefarts.WPFCommon.Converters;assembly=Codefarts.WPFCommon"
              mc:Ignorable="d" 
              d:DesignHeight="129" d:DesignWidth="498.957"
              d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type autoDownloader:PluginEntryModel}}">
@@ -21,23 +22,20 @@
         <templateSelectors:DataSourceTemplateSelector x:Key="SourcePluginTemplateSelector" DefaultTemplate="{StaticResource DefaultDataTemplate}" />
         <!--<logic:SearchResultsViewModel x:Key="ViewModel" SearchResults="{Binding Path=/, RelativeSource={RelativeSource FindAncestor, AncestorType=UserControl}}"/>-->
         <viewModels:SourceContainerViewModel x:Key="ViewModel"  />
+        <converters:ReversedBooleanConverter x:Key="BooleanConverter" IsReversed="True" />
+        <converters:ReversedBooleanConverter x:Key="BooleanConverterReversed"   />
     </UserControl.Resources>
 
     <Grid acb:CommandBehavior.Event="Loaded"
           acb:CommandBehavior.Command="{Binding Source={StaticResource ViewModel}, Path=SetModel}"
-          acb:CommandBehavior.CommandParameter="{Binding}"  >
+          acb:CommandBehavior.CommandParameter="{Binding}"   >
 
         <Expander Name="Expander" ContentTemplateSelector="{StaticResource SourcePluginTemplateSelector}" IsExpanded="true" Content="{Binding}">
             <Expander.HeaderTemplate>
                 <DataTemplate>
                     <Grid Height="30" 
-                          HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}" 
-                            >
-                        <!-- DataContext="{Binding Parent, Mode=OneWay, RelativeSource={RelativeSource Self}}"-->
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="30" />
-                        </Grid.RowDefinitions>
-
+                          HorizontalAlignment="{Binding Path=HorizontalAlignment, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Mode=OneWayToSource}">
+                        
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="Auto" MinWidth="92" />
@@ -48,8 +46,18 @@
 
                         <TextBlock Grid.Column="0" Text="{Binding ModelReference.Plugin.Title, Mode=OneWay, Source={StaticResource ViewModel}}"  VerticalAlignment="Center"  />
                         <local:TimeSpanControl Grid.Column="1" DataContext="{Binding DataContext, ElementName=Expander}"  />
-                        <Button Grid.Column="2" Margin="2,0" Command="{Binding StartPlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}" Content="Start"     />
-                        <Button Grid.Column="3" Margin="2,0" Command="{Binding StopPlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}"   Content="Stop"       />
+                        <Button 
+                            Grid.Column="2" 
+                            Margin="2,0" 
+                            IsEnabled="{Binding ModelReference.Plugin.IsRunning, Source={StaticResource ViewModel}, Converter={StaticResource BooleanConverter}}" 
+                            Command="{Binding StartPlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}" 
+                            Content="Start"     />
+                        <Button 
+                            Grid.Column="3" 
+                            Margin="2,0" 
+                            IsEnabled="{Binding ModelReference.Plugin.IsRunning, Source={StaticResource ViewModel}, Converter={StaticResource BooleanConverterReversed}}" 
+                            Command="{Binding StopPlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}"   
+                            Content="Stop"       />
                         <Button Grid.Column="4" Margin="2,0" Command="{Binding RemovePlugin, Mode=OneWay, Source={StaticResource ViewModel}}" CommandParameter="{Binding}"   Content="Remove" />
                     </Grid>
                 </DataTemplate>
