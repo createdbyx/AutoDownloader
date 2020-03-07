@@ -1,4 +1,6 @@
-﻿namespace AutoDownloader.ViewModels
+﻿using System.Threading.Tasks;
+
+namespace AutoDownloader.ViewModels
 {
     using System;
     using System.Windows.Input;
@@ -63,7 +65,7 @@
                         var entryModel = this.ModelReference;
                         if (entryModel != null)
                         {
-                            entryModel.Plugin.Run();
+                            Task.Run(entryModel.Plugin.Run).ConfigureAwait(false);
                         }
                     });
             }
@@ -108,8 +110,11 @@
                             var app = entryModel.Plugin.Application;
                             if (app == null)
                             {
-                                throw new ArgumentNullException("this.modelReference.Plugin.Application");
+                                throw new ArgumentNullException(nameof(model), "app variable is null");
                             }
+
+                            entryModel.Plugin.Stop();
+                            entryModel.Plugin.Disconnect();
 
                             app.ActivePlugins.Remove(entryModel);
                         }
