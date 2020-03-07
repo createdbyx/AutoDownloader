@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using Codefarts.AutoDownloader.Interfaces;
 
 namespace Codefarts.AutoDownloader
@@ -185,6 +186,23 @@ namespace Codefarts.AutoDownloader
             get
             {
                 return new DelegateCommand(x => true, x => { this.ShowLogs = !this.ShowLogs; });
+            }
+        }
+
+
+        public ICommand StartAllCommand
+        {
+            get
+            {
+                return new DelegateCommand(
+                    model => true,
+                    model =>
+                    {
+                        foreach (var plugin in this.application.ActivePlugins)
+                        {
+                            Task.Run(plugin.Plugin.Run).ConfigureAwait(false);
+                        }
+                    });
             }
         }
     }
